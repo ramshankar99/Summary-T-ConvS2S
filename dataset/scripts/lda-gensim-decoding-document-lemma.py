@@ -9,23 +9,23 @@ import sys
 import os.path
 
 if len(sys.argv) == 3:
-  TOTAL_NUM_TOPICS = int(sys.argv[1])
-  TOTAL_NUM_ITER = int(sys.argv[2])
+    TOTAL_NUM_TOPICS = int(sys.argv[1])
+    TOTAL_NUM_ITER = int(sys.argv[2])
 else:
-  TOTAL_NUM_TOPICS = 512
-  TOTAL_NUM_ITER = 1000
+    TOTAL_NUM_TOPICS = 512
+    TOTAL_NUM_ITER = 1000
 
 
-smartstopwords = "./dataset/scripts/smart-stopwords.txt"
-ldadir = './dataset/data/lda-train-document-lemma-topic-'+str(TOTAL_NUM_TOPICS)+'-iter-'+str(TOTAL_NUM_ITER)
+smartstopwords = "./dataset/data/smart-stopwords.txt"
+lda_dir = './dataset/data/xsum-lda-train-document-lemma-topic-' + str(TOTAL_NUM_TOPICS) + '-iter-' + str(TOTAL_NUM_ITER)
     
 # Corpus
-corpusdir = "./dataset/data/xsum-data-preprocessed"
+corpus_dir = "./dataset/data/xsum-data-preprocessed"
 
 ## Stopwords
-file_stop=open('/root/nltk_data/corpora/stopwords/english')
-data=file_stop.read()
-stopwords   = set(data)
+file_stop = open('C:\\Users\\rams9\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english')
+data = file_stop.read()
+stopwords = set(data)
 # Smart Stopwords
 stopwords = stopwords.union(set([item.strip() for item in open(smartstopwords).readlines() if len(item.strip()) != 0]))
 
@@ -46,7 +46,7 @@ def normalize_words(words):
             yield token
 
 def documents():
-    corpus = nltk.corpus.PlaintextCorpusReader(corpusdir+"/document-lemma", r'.*document-lemma')
+    corpus = nltk.corpus.PlaintextCorpusReader(corpus_dir + "/document-lemma", r'.*document-lemma')
     for filename in corpus.fileids():
         fileid = filename.split(".")[0]
         yield [fileid, list(normalize_words("".join(corpus.raw(filename)).split()))]
@@ -54,17 +54,18 @@ def documents():
 if __name__ == '__main__':
 
     # Load LDA model
-    print ("Loading LDA model from "+ldadir+ "...")
-    lda = gensim.models.ldamulticore.LdaMulticore.load(ldadir+'/lda.model', mmap='r')
+    print("Loading LDA model from " + lda_dir + "...")
+    lda = gensim.models.ldamulticore.LdaMulticore.load(lda_dir + '/lda.model', mmap='r')
 
-    outputdir = corpusdir+"/document-lemma-topic-"+str(TOTAL_NUM_TOPICS)+"-iter-"+str(TOTAL_NUM_ITER)
-    os.system("mkdir -p "+outputdir)
+    output_dir = corpus_dir + "/document-lemma-topic-" + str(TOTAL_NUM_TOPICS) + "-iter-" + str(TOTAL_NUM_ITER)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
     
-    print ("Start decoding in "+outputdir+"...")
+    print("Start decoding in " + output_dir + "...")
     count = 0
     for fileid, doc in documents():
 
-        if os.path.isfile(outputdir+"/"+fileid+".doc-topics"):
+        if os.path.isfile(output_dir + "/" + fileid + ".doc-topics"):
             continue
 
         bow = lda.id2word.doc2bow(doc)
@@ -77,10 +78,10 @@ if __name__ == '__main__':
             # topic_dict[item[0]] = 1
             outstr += (str(item[0]) + "\t" + str(item[1])+"\n")
             
-        foutput = open(outputdir+"/"+fileid+".doc-topics", "w")
+        foutput = open(output_dir + "/" + fileid + ".doc-topics", "w")
         foutput.write(outstr)
         foutput.close()
 
         count += 1
-        if count%10000 == 0:
-            print( count)
+        if count % 100 == 0:
+            print(count)

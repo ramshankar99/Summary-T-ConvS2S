@@ -1,27 +1,27 @@
 import gensim
-import json
-import nltk
-import string
-from nltk.decorators import memoize
-import numpy as np
-import os
+# import json
+# import nltk
+# import string
+# from nltk.decorators import memoize
+# import numpy as np
+# import os
 import sys
 
 if len(sys.argv) == 3:
-  TOTAL_NUM_TOPICS = int(sys.argv[1])
-  TOTAL_NUM_ITER = int(sys.argv[2])
+    TOTAL_NUM_TOPICS = int(sys.argv[1])
+    TOTAL_NUM_ITER = int(sys.argv[2])
 else:
-  TOTAL_NUM_TOPICS = 512
-  TOTAL_NUM_ITER = 1000
+    TOTAL_NUM_TOPICS = 512
+    TOTAL_NUM_ITER = 100
 
-ldadir = './dataset/data/lda-train-document-lemma-topic-'+str(TOTAL_NUM_TOPICS)+'-iter-'+str(TOTAL_NUM_ITER)
+ldadir = './dataset/data/xsum-lda-train-document-lemma-topic-' + str(TOTAL_NUM_TOPICS) + '-iter-' + str(TOTAL_NUM_ITER)
     
 if __name__ == '__main__':
 
     # Load LDA model
-    print ("Loading LDA model from "+ldadir+ "...")
-    lda = gensim.models.ldamulticore.LdaMulticore.load(ldadir+'/lda.model', mmap='r')
-    print (len(lda.id2word))
+    print("Loading LDA model from " + ldadir + "...")
+    lda = gensim.models.ldamulticore.LdaMulticore.load(ldadir + '/lda.model', mmap='r')
+    print(len(lda.id2word))
 
     count = 0
     for id in range(len(lda.id2word)):

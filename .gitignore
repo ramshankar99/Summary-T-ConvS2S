@@ -1,7 +1,4 @@
 .vscode
 venv
 corenlp
-dataset/data/xsum-raw-downloads
-dataset/data/xsum-extracts-from-downloads
-dataset/data/xsum-corenlp-xml-output
-dataset/data/xsum-data-preprocessed
+dataset/data/xsum-*
