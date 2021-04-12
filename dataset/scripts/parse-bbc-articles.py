@@ -70,12 +70,19 @@ class ParseHtml:
         Returns:
         A list of raw text paragraphs with leading and trailing whitespace.
         """
+        # print("SELECTOR:",selector)
         xpaths = map(self.tree.xpath, selector)
         elements = list(chain.from_iterable(xpaths))
         paragraphs = [e.text_content().encode('utf-8') for e in elements]
-        #print('o',(paragraphs))
+        # print('o',(paragraphs))
+        paras = []
         try:
-            wob=paragraphs[0].decode()
+            for lines in paragraphs:
+              wob=lines.decode()
+              paras.append(wob)
+
+            # print("WOB: ","".join(paras))
+            wob = "\n".join(paras)
         except IndexError:
             return "False"
 
@@ -83,7 +90,7 @@ class ParseHtml:
         #paragraphs = map(str.strip, str(paragraphs))
         
         paragraphs = [s for s in paragraphs if s and not str.isspace(s)]
-        
+        # print("Returning: ", paragraphs)
         return paragraphs
     
     # def ExtractText(self, selector):
@@ -98,8 +105,10 @@ class ParseHtml:
     #     xpaths = map(self.tree.xpath, selector)
     #     elements = list(chain.from_iterable(xpaths))
     #     paragraphs = [e.text_content().encode('utf-8') for e in elements]
+    #     paragraphs = paragraphs[0].decode()
     #     paragraphs = map(str.strip, paragraphs)
     #     paragraphs = [s for s in paragraphs if s and not str.isspace(s)]
+    #     print(paragraphs)
         
     #     return paragraphs
 
@@ -143,17 +152,17 @@ def GenerateMapper(t):
     # Extract title
     raw_story = RawStory(url, story_html)
     story_title = ParseHtml(raw_story, corpus).getstory_title()
-    # print story_title
+    # print(story_title)
 
     # Extract Introduction
     raw_story = RawStory(url, story_html)
     story_introduction = ParseHtml(raw_story, corpus).getstory_introduction()
-    # print story_introduction
+    # print(story_introduction)
     
     # Extract rest of the content
     raw_story = RawStory(url, story_html)
     story_restcontent = ParseHtml(raw_story, corpus).getstory_restcontent()
-    # print story_restcontent
+    # print(story_restcontent)
 
     return story_title, story_introduction, story_restcontent
 
@@ -169,7 +178,7 @@ if __name__ == "__main__":
     result_dir = "./dataset/data/xsum-extracts-from-downloads"
     try:
         print('Creating the result directory.')
-        os.mkdir(result_dir)
+        if not os.path.exists(result_dir): os.mkdir(result_dir)
     except WindowsError:
 	    print('Result directory already exists.')
     failed_id_file = open("./dataset/data/url_data/web_arxive_extracts_failed.txt", "w+")
