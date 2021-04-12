@@ -8,8 +8,14 @@ import os
 import sys
 import os.path
 
-TOTAL_NUM_TOPICS = int(sys.argv[1])
-TOTAL_NUM_ITER = int(sys.argv[2])
+if len(sys.argv) == 3:
+  TOTAL_NUM_TOPICS = int(sys.argv[1])
+  TOTAL_NUM_ITER = int(sys.argv[2])
+else:
+  TOTAL_NUM_TOPICS = 512
+  TOTAL_NUM_ITER = 1000
+
+
 smartstopwords = "./dataset/scripts/smart-stopwords.txt"
 ldadir = './dataset/data/lda-train-document-lemma-topic-'+str(TOTAL_NUM_TOPICS)+'-iter-'+str(TOTAL_NUM_ITER)
     

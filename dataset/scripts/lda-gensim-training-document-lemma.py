@@ -11,8 +11,13 @@ import numpy as np
 import sys
 import os
 
-TOTAL_NUM_TOPICS = int(sys.argv[1])
-TOTAL_NUM_ITER = int(sys.argv[2])
+if len(sys.argv) == 3:
+  TOTAL_NUM_TOPICS = int(sys.argv[1])
+  TOTAL_NUM_ITER = int(sys.argv[2])
+else:
+  TOTAL_NUM_TOPICS = 512
+  TOTAL_NUM_ITER = 1000
+
 
 split_dict = "./dataset/data/XSum-DATA-SPLIT.json"
 smartstopwords = "./dataset/scripts/smart-stopwords.txt"
