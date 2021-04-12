@@ -158,7 +158,7 @@ def DownloadMode(urls_file, missing_urls_file, downloads_dir, request_parallelis
 	print('Downloading URLs from the %s file:' % urls_file)
 	urls_full = ReadUrls(urls_file)
 	
-	urls_valid_todownload = urls_full[:100]
+	urls_valid_todownload = urls_full[:]
 	missing_urls_filename = missing_urls_file
 	if os.path.exists(missing_urls_filename):
 		print('Only downloading missing URLs')
