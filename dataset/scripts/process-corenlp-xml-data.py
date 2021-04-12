@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	data_types = ["test", "validation", "train"]
 
 	try:
-		shutil.rmtree(output_directory)
+		if os.path.exists(output_directory): shutil.rmtree(output_directory)
 		print('Creating the output directory.')
 		# Creating Directories
 		os.mkdir(output_directory)
@@ -140,8 +140,8 @@ if __name__ == "__main__":
 
 				if modeFlag == "RESTBODY":
 				    if i == 0:
-				        restbodydata.append(doc_sent[26:])
-				        restbodylemmadata.append(doc_sentlemma[26:])
+				        restbodydata.append(doc_sent)
+				        restbodylemmadata.append(doc_sentlemma)
 				        i+= 1
 				    else:
 				        restbodydata.append(doc_sent)
@@ -156,12 +156,12 @@ if __name__ == "__main__":
 				# print("\n".join(doc_sentences))
 			print("All 3 generated!")
 
-			# rest body data
+			restbodydata[0] = restbodydata[0][26:]
 			foutput = open(output_directory+"/document/"+orgfileid+".document", "w")
 			foutput.write("\n".join(restbodydata)+"\n")
 			foutput.close()
 			
-			# rest body lemma data
+			restbodylemmadata[0] = restbodylemmadata[0][26:]
 			foutput = open(output_directory+"/document-lemma/"+orgfileid+".document-lemma", "w")
 			foutput.write("\n".join(restbodylemmadata)+"\n")
 			foutput.close()
