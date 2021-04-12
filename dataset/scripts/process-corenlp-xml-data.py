@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	data_types = ["test", "validation", "train"]
 
 	try:
-		# shutil.rmtree(output_directory)
+		shutil.rmtree(output_directory)
 		print('Creating the output directory.')
 		# Creating Directories
 		os.mkdir(output_directory)
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 			
 			allcovered = 0
 			for doc_sent, doc_sentlemma in zip(doc_sentences, doc_sentlemmas):
-				# input(doc_sent)
+				i =0
 				if "[ XSUM ] URL [ XSUM ]" in doc_sent:
 					modeFlag = "URL"
 					allcovered += 1
@@ -139,8 +139,13 @@ if __name__ == "__main__":
 					allcovered += 1
 
 				if modeFlag == "RESTBODY":
-					restbodydata.append(doc_sent[26:])
-					restbodylemmadata.append(doc_sentlemma[26:])
+				    if i == 0:
+				        restbodydata.append(doc_sent[26:])
+				        restbodylemmadata.append(doc_sentlemma[26:])
+				        i+= 1
+				    else:
+				        restbodydata.append(doc_sent)
+				        restbodylemmadata.append(doc_sent)
 				elif modeFlag == "INTRODUCTION":
 					summarydata.append(doc_sent[30:]) # Starting after [ XSUM ]
 
