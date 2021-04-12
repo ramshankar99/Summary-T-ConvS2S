@@ -1,6 +1,10 @@
+'''
+Training the lda model 
+'''
 import gensim
 import json
 import nltk
+nltk.download('stopwords')
 import string
 from nltk.decorators import memoize
 import numpy as np
@@ -9,20 +13,26 @@ import os
 
 TOTAL_NUM_TOPICS = int(sys.argv[1])
 TOTAL_NUM_ITER = int(sys.argv[2])
-outputdir = "./lda-train-document-lemma-topic-"+str(TOTAL_NUM_TOPICS)+"-iter-"+str(TOTAL_NUM_ITER)
+
+split_dict = "./dataset/data/XSum-DATA-SPLIT.json"
+smartstopwords = "./dataset/scripts/smart-stopwords.txt"
+outputdir = './dataset/data/lda-train-document-lemma-topic-'+str(TOTAL_NUM_TOPICS)+'-iter-'+str(TOTAL_NUM_ITER)
 os.system("mkdir -p "+outputdir)
 
+
 # Load JSON File : training, dev and test splits.
-with open("XSum-TRAINING-DEV-TEST-SPLIT-90-5-5.json") as json_data:
+with open(split_dict) as json_data:
     train_dev_test_dict = json.load(json_data)
     
 # Corpus
-corpusdir = "./xsum-preprocessed"
+corpusdir = "./dataset/data/xsum-data-preprocessed"
 
 ## Stopwords
-stopwords   = set(nltk.corpus.stopwords.words('english'))
+file_stop=open('/root/nltk_data/corpora/stopwords/english')
+data=file_stop.read()
+stopwords   = set(data)
 # Smart Stopwords
-stopwords = stopwords.union(set([item.strip() for item in open("scripts/smart-stopwords.txt").readlines() if len(item.strip()) != 0]))
+stopwords = stopwords.union(set([item.strip() for item in open(smartstopwords).readlines() if len(item.strip()) != 0]))
 
 ## Punctuations
 punctuation = string.punctuation
@@ -49,33 +59,33 @@ def documents():
 if __name__ == '__main__':
 
     # Build id2word on the training data
-    print "Prepare id2word on the training data"
+    print( "Prepare id2word on the training data")
     id2word = gensim.corpora.Dictionary(documents())
     # print id2word
     corpus  = [id2word.doc2bow(doc) for doc in documents()]
     # print corpus[0]
-    print 
+    print() 
     
     # Prepare Gensim data, train LDA model
-    print "Prepare Gensim data for the training data"
+    print( "Prepare Gensim data for the training data")
     gensim.corpora.MmCorpus.serialize(outputdir+'/corpus.mm', corpus)
     mm = gensim.corpora.MmCorpus(outputdir+'/corpus.mm')
-    print mm
-    print 
-    print "Start training the LDA model"
+    print( mm)
+    print ()
+    print ("Start training the LDA model")
     # lda = gensim.models.ldamodel.LdaModel(corpus=mm, id2word=id2word, num_topics=10, update_every=1, passes=20)
     lda = gensim.models.ldamulticore.LdaMulticore(corpus=mm, id2word=id2word, num_topics=TOTAL_NUM_TOPICS, iterations=TOTAL_NUM_ITER, workers=20, minimum_probability=None, minimum_phi_value=None)
     # Save
-    print
-    print "Saving the LDA model"
+    print()
+    print( "Saving the LDA model")
     lda.save(outputdir+'/lda.model')
-    print 
+    print ()
     
     # Print topics
-    print "Start printing the learned topics"
+    print( "Start printing the learned topics")
     for topic in lda.print_topics(TOTAL_NUM_TOPICS,num_words=30):
-        print topic
-        print
+        print( topic)
+        print()
 
     # # Example output: topic distribution of the first document
     # print "Topic distribution for the first document: "
