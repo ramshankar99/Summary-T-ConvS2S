@@ -1,0 +1,6 @@
+# for dataset
+argparse	
+cchardet
+lxml
+requests
+stanza
