@@ -1,13 +1,11 @@
 .vscode
 venv
 corenlp
-dataset/data/xsum-raw-downloads
-dataset/data/xsum-extracts-from-downloads
-dataset/data/xsum-corenlp-xml-output
-dataset/data/xsum-data-preprocessed
+
+dataset/data/xsum-*
 
 XSum-DATA-SPLIT.json
-
 final-data-failed-decoding.txt
 stanford-inputlist.txt
 web_arxive_extracts_failed.txt
+

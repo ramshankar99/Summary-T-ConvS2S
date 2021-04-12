@@ -4,3 +4,8 @@ cchardet
 lxml
 requests
 stanza
+
+# for LDA
+gensim
+nltk
+python-Levenshtein
