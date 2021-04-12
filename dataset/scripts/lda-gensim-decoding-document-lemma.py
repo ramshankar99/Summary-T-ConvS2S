@@ -17,7 +17,8 @@ else:
 
 
 smartstopwords = "./dataset/data/smart-stopwords.txt"
-lda_dir = './dataset/data/xsum-lda-train-document-lemma-topic-' + str(TOTAL_NUM_TOPICS) + '-iter-' + str(TOTAL_NUM_ITER)
+folder = '/document-lemma-topic-' + str(TOTAL_NUM_TOPICS) + '-iter-' + str(TOTAL_NUM_ITER)
+lda_dir = './dataset/data/xsum-lda-train' + folder
     
 # Corpus
 corpus_dir = "./dataset/data/xsum-data-preprocessed"
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     print("Loading LDA model from " + lda_dir + "...")
     lda = gensim.models.ldamulticore.LdaMulticore.load(lda_dir + '/lda.model', mmap='r')
 
-    output_dir = corpus_dir + "/document-lemma-topic-" + str(TOTAL_NUM_TOPICS) + "-iter-" + str(TOTAL_NUM_ITER)
+    output_dir = corpus_dir + folder
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     

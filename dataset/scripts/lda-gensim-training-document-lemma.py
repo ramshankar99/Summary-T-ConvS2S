@@ -20,7 +20,10 @@ else:
 
 split_dict = "./dataset/data/XSum-DATA-SPLIT.json"
 smartstopwords = "./dataset/data/smart-stopwords.txt"
-output_dir = './dataset/data/xsum-lda-train-document-lemma-topic-' + str(TOTAL_NUM_TOPICS) + '-iter-' + str(TOTAL_NUM_ITER)
+main_output_dir = "./dataset/data/xsum-lda-train"
+if not os.path.exists(main_output_dir):
+    os.mkdir(main_output_dir)
+output_dir = os.path.join(main_output_dir, 'document-lemma-topic-' + str(TOTAL_NUM_TOPICS) + '-iter-' + str(TOTAL_NUM_ITER))
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
