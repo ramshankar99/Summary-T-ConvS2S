@@ -172,7 +172,7 @@ def DownloadMode(urls_file, missing_urls_file, downloads_dir, request_parallelis
 	
 	while(len(urls_left_todownload) != 0):
 		
-		with Pool(5) as pool:
+		with Pool(20) as pool:
 			results = pool.map(DownloadMapper, urls_left_todownload)
 			progress_bar = ProgressBar(len(urls_left_todownload))
 

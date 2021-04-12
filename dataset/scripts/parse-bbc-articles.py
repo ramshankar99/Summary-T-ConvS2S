@@ -20,7 +20,7 @@ class ParseHtml:
         self.story = story
         self.corpus = corpus
         # self.parser = html.HTMLParser(encoding=chardet.detect(self.story.html)['encoding'])
-        self.parser = html.HTMLParser(encoding='utf8')
+        self.parser = html.HTMLParser(encoding='utf-8')
         self.tree = html.document_fromstring(self.story.html, parser=self.parser)
         
         # Elements to delete.
@@ -74,7 +74,10 @@ class ParseHtml:
         elements = list(chain.from_iterable(xpaths))
         paragraphs = [e.text_content().encode('utf-8') for e in elements]
         #print('o',(paragraphs))
-        wob=paragraphs[0].decode()
+        try:
+            wob=paragraphs[0].decode()
+        except IndexError:
+            return "False"
 
         paragraphs = map(str.strip, wob.split("/n"))
         #paragraphs = map(str.strip, str(paragraphs))
@@ -182,22 +185,28 @@ if __name__ == "__main__":
 
     # Process all downloads
     for bbcid in bbcids_dict:
-        
-        if os.path.isfile(result_dir+"/"+bbcid+".data"):
+        # print(bbcid)
+        if os.path.isfile(result_dir + "/" + bbcid + ".data"):
         # Alread processed
             continue
 
         webarxivid = bbcids_dict[bbcid]
-        downloaded_file = download_dir+"/"+get_download_file_name(webarxivid)
+        downloaded_file = download_dir + "/" + get_download_file_name(webarxivid)
         
         if not os.path.isfile(downloaded_file):
-            failed_id_file.write(bbcid+"\tHTML FILE IS NOT YET DOWNLOADED.\n")
+            failed_id_file.write(bbcid + "\tHTML FILE IS NOT YET DOWNLOADED.\n")
             continue
 
         htmldata = open(downloaded_file, encoding='utf-8').read()
         
         # url, corpus, htmldata
         story_title, story_introduction, story_restcontent = GenerateMapper((webarxivid, "bbc", htmldata))
+
+        if story_title == "False" or \
+            story_introduction == "False" or \
+            story_restcontent == "False":
+            failed_id_file.write(bbcid + "\tPARAGRAPH LIST INDEX OUT OF RANGE.\n")
+            continue
 
         if not ((len(story_title.title) == 1) and (len(story_introduction.title) == 1) and (len(story_restcontent.restcontent) != 0)):
             failed_id_file.write(bbcid+"\t"+str(len(story_title.title))+"\t"+str(len(story_introduction.title))+
