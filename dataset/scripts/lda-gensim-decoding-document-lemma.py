@@ -1,3 +1,6 @@
+'''
+Saves doc topics for each article into xsum-data-preprocessed/document-lemma-topic-512-iter-1000/{bbc_id}doc-topics
+'''
 import gensim
 import json
 import nltk
@@ -24,7 +27,7 @@ lda_dir = './dataset/data/xsum-lda-train' + folder
 corpus_dir = "./dataset/data/xsum-data-preprocessed"
 
 ## Stopwords
-file_stop = open('C:\\Users\\rams9\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english')
+file_stop = open('/root/nltk_data/corpora/stopwords/english')
 data = file_stop.read()
 stopwords = set(data)
 # Smart Stopwords

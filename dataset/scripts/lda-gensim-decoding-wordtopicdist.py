@@ -1,3 +1,8 @@
+'''
+Generating word to topic 
+Usage: !python /path/lda-gensim-decoding-wordtopicdist.py 
+Saves log in ./dataset/data/xsum-lda-train/document-lemma-topic-512-iter-1000/word_term_topics.log
+'''
 import gensim
 # import json
 # import nltk

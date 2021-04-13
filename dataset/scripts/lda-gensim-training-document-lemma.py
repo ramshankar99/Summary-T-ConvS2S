@@ -1,5 +1,6 @@
 '''
 Training the lda model 
+Usage: !python /path/lda-gensim-training-document-lemma.py > ./dataset/data/xsum-lda-train/lda-train.log
 '''
 import gensim
 import json
@@ -35,7 +36,7 @@ with open(split_dict) as json_data:
 corpusdir = "./dataset/data/xsum-data-preprocessed"
 
 ## Stopwords
-file_stop = open('C:\\Users\\rams9\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english')
+file_stop = open('/root/nltk_data/corpora/stopwords/english')
 data = file_stop.read()
 stopwords = set(data)
 # Smart Stopwords
