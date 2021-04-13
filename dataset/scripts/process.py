@@ -67,13 +67,14 @@ def get_doctopic_data_from_file(doctopicfile, topic_list):
     data.append(ldata[0]+":"+ldata[1])
   return ",".join(data)
 
-def write_to_bin(data_type, out_file_rb, out_file_fs, out_file_doctopics, out_file_document_lemma, word_topic_dict_final, topic_list):
+def write_to_bin(data_type, out_file_rb, out_file_fs, out_file_doctopics, out_file_document_lemma, word_topic_dict_final, topic_list, count=0):
   
   """Reads all the bbids and write them to out file."""
   print ("Making text file for bibids listed as {}...".format(data_type))
   
   bbcids = train_dev_test_dict[data_type]
   num_stories = len(bbcids)
+  print(num_stories)
 
   rb_foutput = open(out_file_rb, "w")
   fs_foutput = open(out_file_fs, "w")
@@ -83,7 +84,7 @@ def write_to_bin(data_type, out_file_rb, out_file_fs, out_file_doctopics, out_fi
   for idx,s in enumerate(bbcids):
     
     if idx % 1000 == 0:
-      print("Writing story %i of %i; %.2f percent done".format(idx, num_stories, float(idx)*100.0/float(num_stories)))
+      print("Writing story {} of {}; {} percent done".format(idx, num_stories, float(idx)*100.0/float(num_stories)))
 
     # Input Files
     documentfile = bbc_tokenized_stories_dir + "/document/" + s + ".document"
@@ -95,14 +96,18 @@ def write_to_bin(data_type, out_file_rb, out_file_fs, out_file_doctopics, out_fi
     abstract = get_data_from_file(summaryfile)
     article = get_data_from_file(documentfile)
     article_lemma = get_data_from_file(documentfile_lemma)
-
+ 
     article_word_list = article.strip().split()
     article_lemma_list = article_lemma.strip().split()
+
+    # print("A ",len(article_word_list), article_word_list)
+    # print("B ", len(article_lemma_list), article_lemma_list)
 
     if len(article_word_list) != len(article_lemma_list ):
       print(idx, s)
       print("Word count and lemma count did not match.")
-      exit(0)
+      count +=1
+      # exit(0)
 
     article = article_word_list[:400]
     article_lemma = article_lemma_list[:400]
@@ -132,6 +137,8 @@ def write_to_bin(data_type, out_file_rb, out_file_fs, out_file_doctopics, out_fi
   fs_foutput.close()
   doctopics_foutput.close()
   document_lemma_foutput.close()
+
+  print("WORD LEMMA PROBLEM: ",count)
   
   print("Finished writing file:\n{}\n{}\n{}\n{}\n".format(out_file_rb, out_file_fs, out_file_doctopics, out_file_document_lemma))
 
@@ -176,6 +183,7 @@ if __name__ == '__main__':
   wordids.sort()
   for wordid in wordids:
     word = wordid_word_dict[wordid]
+    # Assign topic vector using dictionary and default values
     topic_vector = [word_topic_dict[word][i] if i in word_topic_dict[word] else str_min_word_topic_prob for i in topic_list]
     flemma_dict.write(word+" "+" ".join(topic_vector)+"\n")
   flemma_dict.close()
