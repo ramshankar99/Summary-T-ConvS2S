@@ -107,7 +107,7 @@ def main(args):
         epoch += 1
         batch_offset = 0
     train_meter.stop()
-    plt.plot(eg, pg, color='green', linestyle='dashed', linewidth = 3,
+    plt.plot(cum_epoch, cum_losses, color='green', linestyle='dashed', linewidth = 3,
          marker='o', markerfacecolor='blue', markersize=12)
     plt.show()
 
