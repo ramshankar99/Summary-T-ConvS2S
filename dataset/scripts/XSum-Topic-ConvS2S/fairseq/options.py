@@ -6,7 +6,10 @@
 # can be found in the PATENTS file in the same directory.
 #
 #
-# Modified by Shashi Narayan (2018)
+# Modified 
+'''
+Command line arguments for model specifications, optimisers, train specs etc
+'''
 
 import argparse
 
@@ -271,6 +274,12 @@ def add_model_args(parser):
         choices=CRITERION_REGISTRY.keys(),
         help='training criterion: {} (default: cross_entropy)'.format(
             ', '.join(CRITERION_REGISTRY.keys())),
+    )
+
+    # Model variant to be used 
+    group.add_argument(
+        '--variant', default = 1,  metavar='VAR', choices= range(1,3), help= "model variant: \
+        1: enc(t',tD) dec(tD)   2: enc(t') dec(tD)", type=int
     )
 
     return group

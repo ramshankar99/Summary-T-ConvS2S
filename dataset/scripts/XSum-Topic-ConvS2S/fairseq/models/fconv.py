@@ -5,7 +5,11 @@
 # the root directory of this source tree. An additional grant of patent rights
 # can be found in the PATENTS file in the same directory.
 #
-# Modified by Shashi Narayan (2018)
+# Modified 
+'''
+Model architectures 
+Forward and backward passes 
+'''
 
 import math
 import torch
@@ -17,7 +21,6 @@ from fairseq.data import LanguagePairDataset
 from fairseq.modules import BeamableMM, GradMultiply, LearnedPositionalEmbedding, LinearizedConvolution
 
 from . import FairseqEncoder, FairseqIncrementalDecoder, FairseqModel, register_model, register_model_architecture
-
 
 @register_model('fconv')
 class FConvModel(FairseqModel):
@@ -56,6 +59,7 @@ class FConvModel(FairseqModel):
             convolutions=eval(args.encoder_layers),
             dropout=args.dropout,
             max_positions=args.max_source_positions,
+            variant = args.variant
         )
         decoder = FConvDecoder(
             dst_dict,
@@ -73,10 +77,12 @@ class FConvModel(FairseqModel):
 class FConvEncoder(FairseqEncoder):
     """Convolutional encoder"""
     def __init__(self, dictionary, embed_dim=512, max_positions=1024,
-                 convolutions=((512, 3),) * 20, dropout=0.1):
+                 convolutions=((512, 3),) * 20, dropout=0.1, variant = 1):
         super().__init__(dictionary)
         self.dropout = dropout
         self.num_attention_layers = None
+
+        self.variant = variant # choose variant 
 
         num_embeddings = len(dictionary)
         padding_idx = dictionary.pad()
@@ -89,7 +95,7 @@ class FConvEncoder(FairseqEncoder):
         )
 
         in_channels = convolutions[0][0]
-        # Shashi
+        
         self.fc1 = Linear(embed_dim+embed_dim, in_channels, dropout=dropout)
         self.projections = nn.ModuleList()
         self.convolutions = nn.ModuleList()
@@ -104,29 +110,33 @@ class FConvEncoder(FairseqEncoder):
         self.fc2 = Linear(in_channels, embed_dim+embed_dim)
 
     def forward(self, src_tokens, src_lengths, src_doctopic, src_wordtopics):
+
         # embed tokens and positions
-        # print(self.embed_tokens(src_tokens), self.embed_positions(src_tokens), src_doctopic, src_wordtopics)
+        # print("------------------------------------------------------")
+        # print(self.embed_tokens(src_tokens))
+        # print("------------------------------------------------------")
+        # print(self.embed_positions(src_tokens))
+        # print("------------------------------------------------------")
+        # print(src_doctopic)
+        # print("------------------------------------------------------")
+        # print(src_wordtopics)
+        # exit(0)          
 
-        # ''' 1)
-        # src_doctopic: batchsize x 512
-        # src_wordtopics: batchsize x wordcount x 512
+        ''' Shapes
+        src_doctopic: batchsize x 512
+        src_wordtopics: batchsize x wordcount x 512
         src_doctopic_ext = src_doctopic.unsqueeze(1) # batchsize x 1 x 512
-        # print(src_doctopic_ext)
         src_wordtopics_doctopic = src_wordtopics * src_doctopic_ext # batchsize x wordcount x 512
-        # print(src_wordtopics_doctopic)
-        # ''' 
+        src_wordtopics_doctopic = src_wordtopics # batchsize x wordcount x 512
+        ''' 
 
-        ''' 2)
-        # src_doctopic: batchsize x 512
-        # src_wordtopics: batchsize x wordcount x 512
-        src_doctopic_ext = src_doctopic.unsqueeze(1) # batchsize x 1 x 512
-        # print(src_doctopic_ext)
-        src_wordtopics_doctopic = src_wordtopics * src_doctopic_ext # batchsize x wordcount x 512
-        # print(src_wordtopics_doctopic)
-	# Normalize src_wordtopics_doctopic (April 29th)
-        src_wordtopics_doctopic = F.normalize(src_wordtopics_doctopic, p=2, dim=2)
-        '''
-        
+        if self.variant == 1:
+          # print("USING ENCODER DECODER WITH enc(t', tD) dec(tD)")
+          src_doctopic_ext = src_doctopic.unsqueeze(1) # batchsize x 1 x 512
+          src_wordtopics_doctopic = src_wordtopics * src_doctopic_ext # batchsize x wordcount x 512
+        else:
+          # print("USING ENCODER DECODER WITH enc(t') dec(tD)")
+          src_wordtopics_doctopic = src_wordtopics# batchsize x wordcount x 512
 
         x = self.embed_tokens(src_tokens) + self.embed_positions(src_tokens) # batchsize x wordcount x 512
         # print(x)
@@ -152,7 +162,7 @@ class FConvEncoder(FairseqEncoder):
             padding_r = conv.kernel_size[0] // 2
             x = F.pad(x, (0, 0, 0, 0, padding_l, padding_r))
             x = conv(x)
-            x = F.glu(x, dim=2)
+            x = F.glu(x, dim=2) # GLU 
             x = (x + residual) * math.sqrt(0.5)
 
         # T x B x C -> B x T x C
