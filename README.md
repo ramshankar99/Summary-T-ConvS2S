@@ -50,6 +50,27 @@ CUDA_VISIBLE_DEVICES=1
                                                             --log-interval 10
 ```
 
+# Run with the Pretrained model
+
+Make sure that ./xsum-data-topic-convs2s has the test files to decode, the source and target dictionary files.
+```
+!python ./XSum-Topic-ConvS2S/generate.py ./xsum-data-topic-convs2s-output --path ../checkpoints-topic-convs2s/checkpoint_last.pt \
+                                                                          --batch-size 1 \
+                                                                          --beam 10 \
+                                                                          --replace-unk \
+                                                                          --source-lang document \
+                                                                          --target-lang summary \
+                                                                          --doctopics doc-topics \
+                                                                          --encoder-embed-dim 512 > ./test-output-topic-convs2s-checkpoint-best.pt 
+```
+
+# Extract the Hypothesis
+
+To extract the summary from a given document, run the following 
+```
+!python ./extract-hypothesis-fairseq.py -o .//test-output-topic-convs2s-checkpoint-best.pt -f ./final-test-output-topic-convs2s-checkpoint-best.pt
+```
+
 
 # ROUGE
 
