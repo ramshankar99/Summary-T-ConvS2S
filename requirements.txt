@@ -9,3 +9,6 @@ stanza
 gensim
 nltk
 python-Levenshtein
+
+# for rougue 
+py-rouge
