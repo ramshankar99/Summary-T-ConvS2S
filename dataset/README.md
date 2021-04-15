@@ -27,6 +27,8 @@ Log saved in ./dataset/data/xsum-lda-train/document-lemma-topic-512-iter-1000/wo
 !python path/lda-gensim-decoding-document-lemma.py
 ```
 Saves doc-topic files in ./dataset/data/xsum-data-preprocessed/document-lemma-topic-512-iter-1000/{id}.doc-topics
+<br><br>
+Check visualise_lda.html for an interactive summary of the lda training outcome 
 
 # Preprocess 
 
@@ -86,3 +88,15 @@ CUDA_VISIBLE_DEVICES=1
 ```
 
 
+# ROUGE
+
+```
+!python path/eval_rouge.py --summary {system_summary_file} --mod_sum {model_summary_file}
+```
+Takes a single txt file with generated summary and a file with the model gold summary file and evaluates P, R, F on rouge-1, rouge-2, rouge-l
+Sample Output
+```
+rouge-1:	P: 30.00	R: 37.50	F1: 33.33
+rouge-2:	P: 11.11	R: 14.29	F1: 12.50
+rouge-l:	P: 26.15	R: 31.50	F1: 28.58
+```
