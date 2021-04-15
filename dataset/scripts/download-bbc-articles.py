@@ -9,6 +9,7 @@ import time
 import requests
 import socket
 
+URLS_TO_DOWNLOAD = 1000
 
 class ProgressBar(object):
 	"""Simple progress bar.
@@ -158,7 +159,7 @@ def DownloadMode(urls_file, missing_urls_file, downloads_dir, request_parallelis
 	print('Downloading URLs from the %s file:' % urls_file)
 	urls_full = ReadUrls(urls_file)
 	
-	urls_valid_todownload = urls_full[:]
+	urls_valid_todownload = urls_full[:URLS_TO_DOWNLOAD]
 	missing_urls_filename = missing_urls_file
 	if os.path.exists(missing_urls_filename):
 		print('Only downloading missing URLs')

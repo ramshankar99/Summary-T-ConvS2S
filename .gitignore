@@ -9,3 +9,8 @@ final-data-failed-decoding.txt
 stanford-inputlist.txt
 web_arxive_extracts_failed.txt
 
+XSum-Topic-ConvS2S/__pycache__
+XSum-Topic-ConvS2S/build
+XSum-Topic-ConvS2S/dist
+XSum-Topic-ConvS2S/fairseq
+XSum-Topic-ConvS2S/fairseq.egg-info

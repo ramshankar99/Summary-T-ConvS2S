@@ -1,0 +1,17 @@
+# for dataset
+argparse	
+cchardet
+lxml
+requests
+stanza
+
+# for LDA
+gensim
+nltk
+python-Levenshtein
+
+# for rougue 
+py-rouge
+
+# for topic-convs2s
+torch
