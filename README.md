@@ -72,7 +72,8 @@ Make sure that ./xsum-data-topic-convs2s has the test files to decode, the sourc
 
 To extract the summary from a given document, run the following 
 ```
-!python ./extract-hypothesis-fairseq.py -o .//test-output-topic-convs2s-checkpoint-best.pt -f ./final-test-output-topic-convs2s-checkpoint-best.pt
+!python ./extract-hypothesis-fairseq.py -o ./test-output-topic-convs2s-checkpoint-best.pt \
+                                        -f ./final-test-output-topic-convs2s-checkpoint-best.pt
 ```
 
 
