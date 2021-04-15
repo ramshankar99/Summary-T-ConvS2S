@@ -30,7 +30,10 @@ TEXT= {path to xsum_data_topic_convs2s dir}
 
 ## Model Training 
 
-The model requires GPU for training. Check usage with -h for changing variant and hyperparameters
+The model requires GPU for training. Check usage with -h for changing variant and hyperparameters<br><br>
+Model variants: 
+  1. TCONVS2S enc(t',tD) dec(tD)
+  2. TCONVS2S enc(t') dec(tD)
 ```
 save_directory = "./checkpoints-topic-convs2s"
 CUDA_VISIBLE_DEVICES=1 
@@ -39,7 +42,7 @@ CUDA_VISIBLE_DEVICES=1
                                                             --doctopics doc-topics \
                                                             --max-sentences 32 \
                                                             --arch fconv \
-                                                            --variant 2 \
+                                                            --variant 1 \
                                                             --criterion label_smoothed_cross_entropy \
                                                             --max-epoch 200 \
                                                             --clip-norm 0.1 \
@@ -52,6 +55,7 @@ CUDA_VISIBLE_DEVICES=1
 
 # Run with the Pretrained model
 
+Download the pretrained model at (Pretrained Topic-ConvS2S model and dictionary files)[http://bollin.inf.ed.ac.uk/public/direct/XSUM-EMNLP18-topic-convs2s.tar.gz] (1.2 GB)
 Make sure that ./xsum-data-topic-convs2s has the test files to decode, the source and target dictionary files.
 ```
 !python ./XSum-Topic-ConvS2S/generate.py ./xsum-data-topic-convs2s-output --path ../checkpoints-topic-convs2s/checkpoint_last.pt \
