@@ -13,7 +13,7 @@ import itertools
 import os
 import math
 import torch
-
+import matplotlib.pyplot as plt 
 from fairseq import criterions, data, models, options, progress_bar
 from fairseq.meters import AverageMeter, StopwatchMeter
 from fairseq.trainer import Trainer
@@ -32,9 +32,11 @@ def main(args):
     if data.has_binary_files(args.data, splits):
         dataset = data.load_dataset(
             args.data, splits, args.source_lang, args.target_lang)
+        
     else:
         dataset = data.load_raw_text_dataset(
             args.data, splits, args.source_lang, args.target_lang, args.doctopics, args.encoder_embed_dim)
+        
     if args.source_lang is None or args.target_lang is None:
         # record inferred languages in args, so that it's saved in checkpoints
         args.source_lang, args.target_lang = dataset.src, dataset.dst
@@ -43,6 +45,8 @@ def main(args):
     print('| [{}-lemma-topic] dictionary: {} types'.format(dataset.src, len(dataset.src_lemma_topic_dict)))
     for split in splits:
         print('| {} {} {} examples'.format(args.data, split, len(dataset.splits[split])))
+        print(len(dataset.splits[split]))
+        print('{}'.format(dataset.splits[split]))
 
     # exit(0)
         
@@ -81,6 +85,8 @@ def main(args):
     lr = trainer.get_lr()
     train_meter = StopwatchMeter()
     train_meter.start()
+    cum_losses=[]
+    cum_epoch=[]
     while lr > args.min_lr and epoch <= max_epoch:
         # train for one epoch
         train(args, trainer, dataset, epoch, batch_offset)
@@ -91,6 +97,8 @@ def main(args):
             if k == 0:
                 # only use first validation loss to update the learning schedule
                 lr = trainer.lr_step(epoch, val_loss)
+                cum_epoch.insert(epoch-1,epoch)
+                cum_losses.insert(epoch-1,val_loss)
 
                 # save checkpoint
                 if not args.no_save:
@@ -99,6 +107,9 @@ def main(args):
         epoch += 1
         batch_offset = 0
     train_meter.stop()
+    plt.plot(eg, pg, color='green', linestyle='dashed', linewidth = 3,
+         marker='o', markerfacecolor='blue', markersize=12)
+    plt.show()
 
     print('| done training in {:.1f} seconds'.format(train_meter.sum))
 
