@@ -55,7 +55,7 @@ CUDA_VISIBLE_DEVICES=1
 
 # Run with the Pretrained model
 
-Download the pretrained model at [Pretrained Topic-ConvS2S model and dictionary files](http://bollin.inf.ed.ac.uk/public/direct/XSUM-EMNLP18-topic-convs2s.tar.gz) (1.2 GB)
+Download the pretrained model at [Pretrained Topic-ConvS2S model and dictionary files](http://bollin.inf.ed.ac.uk/public/direct/XSUM-EMNLP18-topic-convs2s.tar.gz) (1.2 GB) <br>
 Make sure that ./xsum-data-topic-convs2s has the test files to decode, the source and target dictionary files.
 ```
 !python ./XSum-Topic-ConvS2S/generate.py ./xsum-data-topic-convs2s-output --path ../checkpoints-topic-convs2s/checkpoint_last.pt \
@@ -87,4 +87,15 @@ Sample Output
 rouge-1:	P: 30.00	R: 37.50	F1: 33.33
 rouge-2:	P: 11.11	R: 14.29	F1: 12.50
 rouge-l:	P: 26.15	R: 31.50	F1: 28.58
+```
+
+# Citation
+```
+@InProceedings{xsum-emnlp,
+  author =      "Shashi Narayan and Shay B. Cohen and Mirella Lapata",
+  title =       "Don't Give Me the Details, Just the Summary! {T}opic-Aware Convolutional Neural Networks for Extreme Summarization",
+  booktitle =   "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing ",
+  year =        "2018",
+  address =     "Brussels, Belgium",
+}
 ```
