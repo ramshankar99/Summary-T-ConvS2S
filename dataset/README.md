@@ -43,5 +43,46 @@ dict.document-lemma.lda.txt
 ```
 Lines in document, summary, document-lemma and doc-topics files are paired as (input document, output summary, input lemmatized document, document topic vector).
 
+<hr>
+
+# Training 
+
+## Data Preprocessing 
+Generate source and target dictionary files. In this case, both files are identical (due to "--joined-dictionary"). It operates on the raw format data.
+```
+TEXT= {path to xsum_data_topic_convs2s dir}
+!python ./dataset/scripts/XSum-Topic-ConvS2S/preprocess.py --source-lang document \
+                                         --target-lang summary \
+                                         --trainpref $TEXT/train \
+                                         --validpref $TEXT/validation \
+                                         --testpref $TEXT/test \
+                                         --destdir $TEXT \
+                                         --joined-dictionary \
+                                         --nwordstgt 50000 \
+                                         --nwordssrc 50000 \
+                                         --output-format raw
+```
+
+## Model Training 
+
+The model requires GPU for training. Check usage with -h for changing variant and hyperparameters
+```
+save_directory = "./dataset/checkpoints-topic-convs2s"
+CUDA_VISIBLE_DEVICES=1 
+!python ./dataset/scripts/XSum-Topic-ConvS2S/train.py $TEXT --source-lang document \
+                                                            --target-lang summary \
+                                                            --doctopics doc-topics \
+                                                            --max-sentences 32 \
+                                                            --arch fconv \
+                                                            --variant 2 \
+                                                            --criterion label_smoothed_cross_entropy \
+                                                            --max-epoch 200 \
+                                                            --clip-norm 0.1 \
+                                                            --lr 0.10 \
+                                                            --dropout 0.2 \
+                                                            --save-dir {save_directory} \
+                                                            --no-progress-bar \
+                                                            --log-interval 10
+```
 
 
