@@ -55,7 +55,7 @@ CUDA_VISIBLE_DEVICES=1
 
 # Run with the Pretrained model
 
-Download the pretrained model at (Pretrained Topic-ConvS2S model and dictionary files)[http://bollin.inf.ed.ac.uk/public/direct/XSUM-EMNLP18-topic-convs2s.tar.gz] (1.2 GB)
+Download the pretrained model at [Pretrained Topic-ConvS2S model and dictionary files](http://bollin.inf.ed.ac.uk/public/direct/XSUM-EMNLP18-topic-convs2s.tar.gz) (1.2 GB)
 Make sure that ./xsum-data-topic-convs2s has the test files to decode, the source and target dictionary files.
 ```
 !python ./XSum-Topic-ConvS2S/generate.py ./xsum-data-topic-convs2s-output --path ../checkpoints-topic-convs2s/checkpoint_last.pt \
